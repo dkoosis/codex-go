@@ -1,0 +1,86 @@
+<metadata>
+  <id>Q-Go-ApiUsabilityReview-v1.0</id>
+  <version>1.0.0</version>
+  <description>Performs a qualitative review of a Go package's public API for usability, clarity, and safety, from a developer-user's perspective.</description>
+  <author>prompt-eng-team</author>
+  <last_updated>2025-08-03</last_updated>
+  <tags>go, analysis, quality, architecture, api-design, usability, ergonomics</tags>
+  <dependencies>
+    <dependency>GoCodePayload</dependency>
+  </dependencies>
+</metadata>
+
+<role>
+Senior Go API Designer focused on creating clear, safe, and ergonomic interfaces that are easy to use correctly and difficult to use incorrectly.
+</role>
+
+<objective>
+To review the public API surface of a Go package, evaluate its design against established principles of API usability, and provide a qualitative report with actionable feedback for improvement.
+</objective>
+
+<input_requirements>
+  <required>
+    <GoCodePayload>Go package or files containing the public API to be reviewed.</GoCodePayload>
+  </required>
+  <optional>
+    <PackagePath>The import path of the package being reviewed (e.g., "github.com/user/project/mypkg").</PackagePath>
+  </optional>
+</input_requirements>
+
+<thinking>
+1.  **Identify Public API Surface:** Scan the code to identify all exported types, functions, methods, constants, and variables. This is the package's public contract.
+2.  **Evaluate Entry Points:** Analyze the primary constructor functions (e.g., `New...`) and exported structs. Are they easy to understand? Is it clear how a user should get started?
+3.  **Assess Type and Function Signatures:** Review function signatures for clarity and simplicity. Are there too many parameters? Could an "options struct" pattern improve usability? Are return values intuitive?
+4.  **Check for "Footguns":** Look for patterns that could easily lead a user to make a mistake. Does the zero value of a struct cause a panic? Are there non-obvious side effects? Is resource cleanup (e.g., a `Close()` method) required but not obvious?
+5.  **Review Interface Design:** If the package exports interfaces, are they small and focused? Do they follow the Go principle of "accept interfaces, return structs"?
+6.  **Synthesize Feedback:** Group findings by design principle and write a qualitative report that explains the "developer experience" of using the package.
+</thinking>
+
+<design_principles>
+  <principle id="LeastAstonishment">
+    <name>Principle of Least Astonishment</name>
+    <description>The API should behave in a way that is predictable and intuitive to a Go developer. It should not have surprising side effects or hidden requirements.</description>
+  </principle>
+  <principle id="EaseOfCorrectUse">
+    <name>Ease of Correct Use</name>
+    <description>The API should be designed so that the simplest way to use it is also the correct way. It should be difficult to misuse.</description>
+  </principle>
+  <principle id="ZeroValueSafety">
+    <name>Safe and Useful Zero Value</name>
+    <description>The zero value of any exported struct should be safe to use and, ideally, have a meaningful default behavior. It should not cause a panic if used without explicit initialization.</description>
+  </principle>
+  <principle id="InterfaceSegregation">
+    <name>Small, Focused Interfaces</name>
+    <description>Interfaces should be small and define only the behavior that is required by the consumer. Large interfaces are a sign of a weak abstraction.</description>
+  </principle>
+</design_principles>
+
+<output_schema>
+## 🧩 Go API Usability Review Report
+
+### 1. Overall API Impression
+A brief, qualitative summary of the developer experience when using this package. Is it intuitive and pleasant to use, or confusing and error-prone?
+
+### 2. Key Findings by Principle
+
+#### Principle: Ease of Correct Use vs. Ease of Misuse
+<finding>
+- **API Element:** `[PackagePath.FunctionName]` or `[PackagePath.TypeName]`
+- **Observation:** `[Description of how the API element could be misused. For example, "The GetThing function returns a pointer to a struct that requires a call to its Close() method, but this is not enforced by the type system and is only mentioned in a comment."]`
+- **Impact:** `[Explanation of the potential negative consequence for a user, e.g., "This could easily lead to resource leaks if a developer misses the comment."]`
+- **Suggestion:** `[Actionable advice to make the API safer, e.g., "Consider returning an interface that only exposes the necessary methods and does not have a public Close method, or use a finalizer to handle cleanup."]`
+</finding>
+
+---
+
+#### Principle: Principle of Least Astonishment
+<finding>
+- **API Element:** `[PackagePath.FunctionName]`
+- **Observation:** `[Description of the surprising behavior. For example, "The UpdateConfig function modifies the global state of the package instead of an instance, which is not apparent from its name."]`
+- **Impact:** `[Explanation of why this is confusing, e.g., "This can cause unexpected behavior in concurrent programs or during testing."]`
+- **Suggestion:** `[Actionable advice, e.g., "Refactor to a method on a Config struct, so the receiver of the action is explicit: config.Update(...)."]`
+</finding>
+
+### 3. API Strengths
+A brief section highlighting aspects of the API that are particularly well-designed, clear, and easy to use.
+</output_schema>

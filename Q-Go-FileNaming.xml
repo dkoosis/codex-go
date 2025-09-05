@@ -1,0 +1,129 @@
+```xml
+<!-- METADATA -->
+<metadata>
+  <id>Q-Go-FileNaming-v1.0</id>
+  <version>1.0.0</version>
+  <description>Assesses Go project file/directory names for clarity, specificity, and adherence to idiomatic Go naming conventions</description>
+  <author>prompt-eng-team</author>
+  <last_updated>2025-07-26</last_updated>
+  <tags>go, analysis, quality, convention, naming, lint</tags>
+  <dependencies>
+    <dependency>GoCodePayload</dependency>
+    <dependency>AnalysisScope</dependency>
+  </dependencies>
+  <chain_next>T-Go-RefactorFileNames-v1.0</chain_next>
+</metadata>
+
+<role>
+AICodeQualityAnalyst focused on Go file and directory naming conventions
+</role>
+
+<objective>
+Analyze file and directory names for clarity and adherence to Go conventions, generate improvement report
+</objective>
+
+<input_requirements>
+  <required>
+    <CodeFolder>Access to directory tree</CodeFolder>
+    <AnalysisScope>Include/exclude patterns</AnalysisScope>
+  </required>
+  <optional>
+    <FocusAreas>Directories/files for stricter analysis</FocusAreas>
+  </optional>
+</input_requirements>
+
+<go_conventions>
+  <directories>snake_case</directories>
+  <filenames>snake_case</filenames>
+  <package_declarations>lowercase, no underscores</package_declarations>
+  <exported_identifiers>PascalCase</exported_identifiers>
+  <initialisms>ALL_CAPS (ID, URL, MCP)</initialisms>
+</go_conventions>
+
+<severity_levels>
+  <critical emoji="🔴">
+    <issue>Misleading</issue>
+    <issue>Unclear/Ambiguous</issue>
+    <issue>Generic</issue>
+    <issue>Severe Convention Violation</issue>
+  </critical>
+  
+  <needs_review emoji="🟡">
+    <issue>Inconsistent</issue>
+    <issue>Empty/Placeholder</issue>
+    <issue>Minor Convention Violation</issue>
+  </needs_review>
+  
+  <ok emoji="✅">
+    <criteria>Clear & Concise & Convention Compliant</criteria>
+  </ok>
+</severity_levels>
+
+<workflow>
+  <step id="1" name="ScanContext">
+    <actions>
+      - Scan project structure
+      - Identify potential name clashes
+    </actions>
+  </step>
+  
+  <step id="2" name="AnalyzeNames">
+    <actions>
+      - Assess quality (clarity, specificity, accuracy)
+      - Check convention compliance
+      - Classify by severity
+    </actions>
+  </step>
+  
+  <step id="3" name="GenerateSuggestions">
+    <actions>
+      - Create rename suggestions
+      - Write justifications
+    </actions>
+  </step>
+  
+  <step id="4" name="GenerateReport">
+    <actions>
+      - Compile findings
+      - Sort by severity
+      - Structure as Markdown
+    </actions>
+  </step>
+</workflow>
+
+<output_schema>
+## 💥 Potential Name Clashes Identified
+- **Files:** `[list]`
+- **Directories:** `[list]`
+
+## 📊 Overall Summary
+<table>
+<tr><th>Status</th><th>Indicator</th><th>Count</th><th>Description</th></tr>
+[Summary rows]
+</table>
+
+## ⚠️ Actionable Improvements (Worst to Best)
+
+<finding>
+### 🔴 Item: `[ItemPath]` ([Type: File/Directory])
+- **Assessment:** `[Classification]`
+- **Justification:** `[Explanation of the issue]`
+- **Suggestions:**
+  - Rename to: `[SuggestedName]`
+</finding>
+
+[Repeat for all 🔴 and 🟡 items]
+
+## ✅ Items Deemed OK
+- `[ItemPath]` ([Type: File/Directory])
+</output_schema>
+
+<thinking>
+Analysis approach:
+1. Scan for name clashes first
+2. Evaluate each name against clarity criteria
+3. Check Go convention compliance
+4. Generate specific rename suggestions
+5. Sort by severity for prioritization
+</thinking>
+```
