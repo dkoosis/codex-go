@@ -1,3 +1,22 @@
+Organize the repository with a conventional Go layout—cmd/ for binaries, internal/ for private packages, pkg/ for exported code, testdata/ for fixtures, and scripts/ for helper scripts—alongside root files like go.mod, Makefile, .golangci.yml, and .env.example
+
+Provide a Makefile that exposes a single entry point (make bootstrap) to install tools and pre‑commit hooks, followed by make check that runs lint, tests (with race and coverage), vet, formatting, and vulnerability scans
+
+Bootstrap scripts should verify Go version, create a local bin directory, install pinned tool versions, and optionally activate pre‑commit hooks; a companion ensure_tools.sh pins versions of golangci-lint, gofumpt, goimports, and govulncheck for deterministic results
+
+Pin the Go toolchain in go.mod to ensure consistency across environments and editors
+
+Document repository conventions in an AGENTS.md (root and per‑directory) covering code style, build/test commands, and any special rules; provide Make or script targets so all checks run via one command
+
+Standardize formatting (gofmt/goimports), linting (golangci-lint), and testing (go test), and keep tests fast and deterministic without external dependencies
+
+Follow error-handling guidelines that wrap errors with cockroachdb/errors, provide rich context, categorize errors consistently, and use structured logging with slog
+
+Enforce documentation standards: package comments beginning with // Package, exported functions with descriptive comments (including parameters, returns, and error conditions), and structured documentation for structs and interfaces
+
+
+
+# MORE
 0) Project goals Codex cares about
 
 One-command bootstrap (no human guesswork).
